@@ -55,9 +55,9 @@ bool scan_msr_range(struct msr_range *range) {
         if (!rdmsrl_safe(msr.address_, &value)) {
             msr.type_ = MSR_TYPE_READABLE;
         }
-        if (msr.address_ != 0x83f && msr.address_ != MSR_IA32_UCODE_WRITE && !wrmsrl_safe(msr.address_, msr.type_ ? value : 0)) {
+        if (msr.address_ != 0x83f && msr.address_ != MSR_IA32_UCODE_WRITE && msr.address_ != 0xc0010020 && !wrmsrl_safe(msr.address_, msr.type_ ? value : 0)) {
             msr.type_ |= MSR_TYPE_WRITEABLE;
-        } else if (msr.address_ == 0x83f || msr.address_ == MSR_IA32_UCODE_WRITE) { // TODO dynamic blacklist via msrs_detect
+        } else if (msr.address_ == 0x83f || msr.address_ == MSR_IA32_UCODE_WRITE || msr.address_ == 0xc0010020) { // TODO dynamic blacklist via msrs_detect
             msr.type_ |= MSR_TYPE_WRITEABLE;
         }
         if (msr.type_) {
